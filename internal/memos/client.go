@@ -124,6 +124,12 @@ func (c *Client) CreateMemo(ctx context.Context, req CreateMemoRequest) (*Memo, 
 		"content":    req.Content,
 		"visibility": normalized,
 	}
+	if req.CreateTime != nil {
+		payload["createTime"] = req.CreateTime.Format(time.RFC3339)
+	}
+	if req.UpdateTime != nil {
+		payload["updateTime"] = req.UpdateTime.Format(time.RFC3339)
+	}
 	if req.Pinned != nil {
 		payload["pinned"] = *req.Pinned
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	mcpgo "github.com/mark3labs/mcp-go/server"
@@ -82,12 +83,14 @@ func newGetTool() mcp.Tool {
 }
 
 func newCreateTool() mcp.Tool {
-	return mcp.NewTool("memos_create",
-		mcp.WithDescription("Create a new memo"),
-		mcp.WithString("content", mcp.Required(), mcp.Description("Memo content in Markdown")),
-		mcp.WithString("visibility", mcp.Description("Visibility: PUBLIC, PROTECTED, PRIVATE (default PRIVATE)")),
-		mcp.WithBoolean("pinned", mcp.Description("Whether to pin the memo")),
-	)
+  return mcp.NewTool("memos_create",
+    mcp.WithDescription("Create a new memo"),
+    mcp.WithString("content", mcp.Required(), mcp.Description("Memo content in Markdown")),
+    mcp.WithString("visibility", mcp.Description("Visibility: PUBLIC, PROTECTED, PRIVATE (default PRIVATE)")),
+    mcp.WithBoolean("pinned", mcp.Description("Whether to pin the memo")),
+    mcp.WithString("createTime", mcp.Description("Optional create time (nullable)")),
+    mcp.WithString("updateTime", mcp.Description("Optional update time (nullable)")),
+  )
 }
 
 func newUpdateTool() mcp.Tool {
@@ -166,11 +169,32 @@ func (s *Server) handleCreate(ctx context.Context, request mcp.CallToolRequest) 
 	}
 	visibility, _ := optionalString(request.GetArguments(), "visibility")
 	pinned, _ := optionalBool(request.GetArguments(), "pinned")
+	createTimeStr, _ := optionalString(request.GetArguments(), "createTime")
+	updateTimeStr, _ := optionalString(request.GetArguments(), "updateTime")
+
+	var createTimePtr *time.Time
+	if createTimeStr != "" {
+		if ct, err := time.Parse(time.RFC3339, createTimeStr); err == nil {
+			createTimePtr = &ct
+		} else {
+			return toolError(fmt.Errorf("invalid createTime format, expected RFC3339: %w", err)), nil
+		}
+	}
+	var updateTimePtr *time.Time
+	if updateTimeStr != "" {
+		if ut, err := time.Parse(time.RFC3339, updateTimeStr); err == nil {
+			updateTimePtr = &ut
+		} else {
+			return toolError(fmt.Errorf("invalid updateTime format, expected RFC3339: %w", err)), nil
+		}
+	}
 
 	memo, err := s.client.CreateMemo(ctx, memos.CreateMemoRequest{
-		Content:    content,
-		Visibility: visibility,
-		Pinned:     pinned,
+		Content:     content,
+		Visibility:  visibility,
+		Pinned:      pinned,
+		CreateTime:  createTimePtr,
+		UpdateTime:  updateTimePtr,
 	})
 	if err != nil {
 		return toolError(err), nil

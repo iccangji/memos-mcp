@@ -1,5 +1,7 @@
 package memos
 
+import "time"
+
 type SearchRequest struct {
 	Query       string
 	CreatorID   *int64
@@ -19,9 +21,11 @@ type SearchResponse struct {
 }
 
 type CreateMemoRequest struct {
-	Content    string
-	Visibility string
-	Pinned     *bool
+  Content     string
+  Visibility  string
+  Pinned      *bool
+  CreateTime  *time.Time
+  UpdateTime  *time.Time
 }
 
 type UpdateMemoRequest struct {
