@@ -21,11 +21,11 @@ type SearchResponse struct {
 }
 
 type CreateMemoRequest struct {
-  Content     string
-  Visibility  string
-  Pinned      *bool
-  CreateTime  *time.Time
-  UpdateTime  *time.Time
+    Content     string
+    Visibility  string
+    Pinned      *bool
+    CreateTime  *time.Time
+    UpdateTime  *time.Time
 }
 
 type UpdateMemoRequest struct {

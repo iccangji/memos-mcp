@@ -83,14 +83,14 @@ func newGetTool() mcp.Tool {
 }
 
 func newCreateTool() mcp.Tool {
-  return mcp.NewTool("memos_create",
-    mcp.WithDescription("Create a new memo"),
-    mcp.WithString("content", mcp.Required(), mcp.Description("Memo content in Markdown")),
-    mcp.WithString("visibility", mcp.Description("Visibility: PUBLIC, PROTECTED, PRIVATE (default PRIVATE)")),
-    mcp.WithBoolean("pinned", mcp.Description("Whether to pin the memo")),
-    mcp.WithString("createTime", mcp.Description("Optional create time (nullable)")),
-    mcp.WithString("updateTime", mcp.Description("Optional update time (nullable)")),
-  )
+    return mcp.NewTool("memos_create",
+        mcp.WithDescription("Create a new memo"),
+        mcp.WithString("content", mcp.Required(), mcp.Description("Memo content in Markdown")),
+        mcp.WithString("visibility", mcp.Description("Visibility: PUBLIC, PROTECTED, PRIVATE (default PRIVATE)")),
+        mcp.WithBoolean("pinned", mcp.Description("Whether to pin the memo")),
+        mcp.WithString("createTime", mcp.Description("Create time (default NOW)")),
+        mcp.WithString("updateTime", mcp.Description("Update time (default NOW)")),
+    )
 }
 
 func newUpdateTool() mcp.Tool {
