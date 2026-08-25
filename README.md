@@ -48,6 +48,8 @@ CLI flags (Go binary):
   - `content` (string)
   - `visibility` (string, default PRIVATE)
   - `pinned` (boolean)
+  - `createTime` (string, optional, RFC3339 format)
+  - `updateTime` (string, optional, RFC3339 format)
 
 - `memos_update`
   - `memo_uid` (string)
